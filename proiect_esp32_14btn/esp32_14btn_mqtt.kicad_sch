@@ -1,0 +1,12 @@
+(kicad_sch
+  (version 20230121)
+  (generator "manual-bootstrap")
+  (uuid 9a6f4448-b0c0-4d6e-8f3b-2e3d0aef2a11)
+  (paper "A4")
+  (title_block
+    (title "ESP32 14 Buttons MQTT")
+    (date "2026-05-15")
+    (rev "A0")
+    (company "Kicad-test")
+  )
+)
