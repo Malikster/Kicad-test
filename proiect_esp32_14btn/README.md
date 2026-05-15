@@ -3,22 +3,52 @@
 ## Cerință
 Placă PCB cu ESP32 care citește 14 pushbutoane externe prin 2 mufe RJ45 (7 semnale + 1 GND pe fiecare mufă) și publică stările prin MQTT.
 
+## Update cerințe (revizie)
+1. Alimentare obligatorie prin USB-C, cu suport **5V până la 12V** la intrare.
+2. Clarificare arhitectură I/O: dacă ESP32 citește direct cele 14 intrări sau e nevoie de componentă intermediară.
+
 ## Arhitectură hardware propusă
 - MCU: `ESP32-WROOM-32E` (modul)
 - Conectori butoane:
   - `J1 RJ45` -> BTN1..BTN7 + GND
   - `J2 RJ45` -> BTN8..BTN14 + GND
-- Alimentare:
-  - Intrare 5V pe conector screw terminal sau USB-C breakout
-  - Regulator 3.3V (de ex. AMS1117-3.3 sau MP1584 dacă vrei eficiență mai bună)
-- Protecție input:
-  - Rezistențe serie 220Ω pe fiecare intrare buton
-  - ESD TVS array pe liniile care vin din afara plăcii (opțional, recomandat)
+- Alimentare USB-C (5V-12V):
+  - `J3 USB-C receptacle` configurat ca **power sink**
+  - `U_PD`: controller USB-C PD sink (ex: CH224K / IP2721 / STUSB4500)
+  - `U_BUCK`: convertor buck 5V-12V -> 3.3V (ex: MP1584EN / AP63203)
+  - protecții recomandate:
+    - `F1` polyfuse pe VBUS
+    - `D_TVS` TVS pe VBUS
+    - protecție inversare / hot-plug (ideal eFuse)
+- Protecție input butoane:
+  - Rezistențe serie 220Ω pe fiecare intrare BTN
+  - ESD TVS array pe liniile care vin prin RJ45 (recomandat)
 - Boot/flash:
   - Butoane EN și IO0
   - Header UART (3V3, GND, TX0, RX0, EN, IO0)
 
-## Mapare pini recomandată (GPIO)
+## Notă importantă USB-C (5V-12V)
+Dacă placa NU include controller PD, majoritatea surselor USB-C vor da implicit doar **5V**.
+Pentru 9V/12V real pe USB-C, proiectul trebuie să includă explicit negocierea PD (U_PD).
+
+## ESP32 și cele 14 intrări: direct sau intermediar?
+**Da, ESP32 poate citi direct toate cele 14 butoane**, fără multiplexor/expander, dacă:
+- folosești GPIO-uri disponibile și stabile la boot;
+- configurezi pinii ca `INPUT_PULLUP`;
+- butoanele închid la GND (active-low).
+
+### Când merită componentă intermediară
+Folosești expander I2C/SPI doar dacă vrei:
+- mai puține trasee directe până la ESP32,
+- filtrare hardware suplimentară,
+- scalare viitoare (>14 butoane),
+- izolare mai bună la zgomot pe cabluri lungi.
+
+Exemple expandere:
+- `MCP23017` (I2C, 16 GPIO)
+- `PCF8575` (I2C, 16 GPIO)
+
+## Mapare pini recomandată (GPIO directe)
 > Evit pinii sensibili de boot unde e posibil.
 
 - BTN1  -> GPIO13
@@ -41,7 +71,7 @@ Config software recomandat:
 - Butonul închide la GND (active-low)
 - Debounce software 20-40 ms
 
-## Alocare RJ45 (exemplu T568B logic intern)
+## Alocare RJ45 (intern pe placă)
 ### J1
 1. BTN1
 2. BTN2
