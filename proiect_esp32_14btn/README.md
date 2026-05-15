@@ -146,3 +146,7 @@ Rulează verificările rapide cu:
 ./validate_project.sh
 ```
 Verifică existența fișierelor de proiect și a exporturilor generate, plus disponibilitatea ERC/DRC în build-ul local de `kicad-cli`.
+
+
+## Notă importantă despre starea actuală
+Dacă `bom.xml` are 0 componente, schema este încă goală (doar chenar/title block). Rulează `./validate_project.sh` pentru a detecta automat această problemă.

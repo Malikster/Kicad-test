@@ -17,6 +17,18 @@ pass "kicad-cli detected: $KVER"
 [[ -f "$PCB" ]] || fail "Missing PCB: $PCB"
 pass "Project files exist"
 
+COMP_COUNT="$(python3 - <<'PYC'
+import re,sys
+from pathlib import Path
+xml=Path("$OUT/bom.xml").read_text(errors="ignore") if Path("$OUT/bom.xml").exists() else ""
+print(0 if "<components/>" in xml else len(re.findall(r"<comp ref=", xml)))
+PYC
+)"
+if [[ "$COMP_COUNT" -le 0 ]]; then
+  fail "Schematic appears empty (0 components in BOM)"
+fi
+pass "Schematic has components: $COMP_COUNT"
+
 [[ -f "$OUT/schematic.pdf" ]] || fail "Missing export: schematic.pdf"
 [[ -f "$OUT/bom.xml" ]] || fail "Missing export: bom.xml"
 [[ -f "$OUT/drill/esp32_14btn_mqtt.drl" ]] || fail "Missing drill file"
