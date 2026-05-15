@@ -138,3 +138,11 @@ Scriptul exportă:
 - Drill file
 
 Notă: în KiCad CLI 7.0.11 nu există comandă ERC/DRC directă disponibilă în acest mediu.
+
+
+## Validare proiect
+Rulează verificările rapide cu:
+```bash
+./validate_project.sh
+```
+Verifică existența fișierelor de proiect și a exporturilor generate, plus disponibilitatea ERC/DRC în build-ul local de `kicad-cli`.
