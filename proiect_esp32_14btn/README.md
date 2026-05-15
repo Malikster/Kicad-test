@@ -124,3 +124,17 @@ Exemplu payload JSON:
 - `esp32_14btn_mqtt.kicad_pcb`
 
 Aceste fișiere sunt punctul de pornire. Schematic-ul și layout-ul trebuie completate în UI-ul KiCad (plasare simboluri, conexiuni, ERC/DRC, rutare).
+
+
+## Pipeline script (varianta 2)
+Poți regenera artefactele automat cu:
+```bash
+./generate_outputs.sh
+```
+Scriptul exportă:
+- PDF schematic
+- BOM XML
+- Gerber files
+- Drill file
+
+Notă: în KiCad CLI 7.0.11 nu există comandă ERC/DRC directă disponibilă în acest mediu.
