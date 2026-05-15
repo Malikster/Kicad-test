@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>/workspace/Kicad-test/proiect_esp32_14btn/esp32_14btn_mqtt.kicad_sch</source>
-    <date>Fri May 15 10:43:19 2026</date>
+    <date>Fri May 15 11:05:30 2026</date>
     <tool>Eeschema 7.0.11+dfsg-1build4</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
